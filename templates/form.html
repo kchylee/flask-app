@@ -2,35 +2,43 @@
     <head>
       <title>Submit a form</title>
      <link rel="stylesheet" type="text/css" href="/static/style.css">
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.2.2/jquery.form.min.js" integrity="sha384-FzT3vTVGXqf7wRfy8k4BiyzvbNfeYjK+frTVqZeNDFl8woCbF0CYG6g2fMEFFo/i" crossorigin="anonymous"></script>
+     <script>
+        $('#X-Progress-ID').val('random string');
+          var options = {
+            dataType: 'xml',
+            url: '/upload?X-Progress-ID='+$('#X-Progress-ID').val(),
+            beforeSubmit: showRequest,
+            success: showResponse
+          }
+        $('#img_upload').ajaxSubmit(options);
+
+        $('#img_upload').find('#form_submit_button').append('&lt;span id="uploadprogressbar"&gt;&lt;/span&lt;');
+        $('#img_upload').find('#uploadprogressbar').progressBar();
+
+        function showRequest(formData, jqForm, options) {
+            // do something with formData
+            return True;
+        }
+
+        function showResponse(response) {
+            // do something with response
+        }
+      </script>
     </head>
     <body>
       <div id="container">
         <div class="pagetitle">
-          <h1>Leave a comment</h1>
+          <h1>Upload an Image</h1>
         </div>
         <div id="main">
-          <!--image upload-->
-          <form action="/sign?%s" enctype="multipart/form-data" method="post">
-            <div>
-              <textarea name="content" rows="3" cols="60"></textarea>
-            </div>
-            <div><label>Image:</label></div>
-            <div><input type="file" name="img"/></div>
-            <div><input type="submit" value="Upload Image"></div>
+          <form id="img_upload" action="/upload" enctype="multipart/form-data" method="post">
+            <label>Image:</label>
+            <input type="file" name="img"/>
+            <!-- <input type="hidden" id="X-Progress-ID" name="X-Progress-ID" value=""/>
+            <input type="hidden" id="id" name="id" value=""/> -->
+            <input type="submit" id="form_submit_button" value="Upload Image">
           </form>
-          <!--image upload ends
-          <form method="post" action="{{ url_for('submitted_form') }}">
-            <label for="name">Name:</label>
-            <input type="text" name="name"><br />
-            <label for="email">Email address:</label>
-            <input type="email" name="email"><br />
-            <label for="site_url">Website URL:</label>
-            <input type="url" name="site_url"><br />
-            <label for="comments">Comments:</label>
-            <textarea name="comments"></textarea><br />
-            <input type="submit">
-          </form>
-          -->
         </div>
       </div>
     </body>
