@@ -7,7 +7,7 @@
         $('#X-Progress-ID').val('random string');
           var options = {
             dataType: 'xml',
-            url: '/upload?X-Progress-ID='+$('#X-Progress-ID').val(),
+            url: '/upload',
             beforeSubmit: showRequest,
             success: showResponse
           }
