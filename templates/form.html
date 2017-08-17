@@ -2,28 +2,29 @@
     <head>
       <title>Submit a form</title>
      <link rel="stylesheet" type="text/css" href="/static/style.css">
-     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.2.2/jquery.form.min.js" integrity="sha384-FzT3vTVGXqf7wRfy8k4BiyzvbNfeYjK+frTVqZeNDFl8woCbF0CYG6g2fMEFFo/i" crossorigin="anonymous"></script>
-     <script>
-        $('#X-Progress-ID').val('random string');
-          var options = {
-            dataType: 'xml',
-            url: '/upload',
-            beforeSubmit: showRequest,
-            success: showResponse
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.2.2/jquery.form.min.js" integrity="sha384-FzT3vTVGXqf7wRfy8k4BiyzvbNfeYjK+frTVqZeNDFl8woCbF0CYG6g2fMEFFo/i" crossorigin="anonymous">
+        $(document).ready(() => {
+          $('#img_upload').submit(() => {
+            var options = {
+              dataType: 'json',
+              url: '/upload',
+              beforeSubmit: showRequest,
+              success: showResponse
+            }
+
+            $(this).ajaxSubmit(options);
+          })          
+
+          function showRequest(formData, jqForm, options) {
+              // do something with formData
+              return True;
           }
-        $('#img_upload').ajaxSubmit(options);
 
-        $('#img_upload').find('#form_submit_button').append('&lt;span id="uploadprogressbar"&gt;&lt;/span&lt;');
-        $('#img_upload').find('#uploadprogressbar').progressBar();
-
-        function showRequest(formData, jqForm, options) {
-            // do something with formData
-            return True;
-        }
-
-        function showResponse(response) {
-            // do something with response
-        }
+          function showResponse(response) {
+              // do something with response
+              console.log(response);
+          }
+        })
       </script>
     </head>
     <body>
@@ -35,8 +36,6 @@
           <form id="img_upload" action="/upload" enctype="multipart/form-data" method="post">
             <label>Image:</label>
             <input type="file" name="img"/>
-            <!-- <input type="hidden" id="X-Progress-ID" name="X-Progress-ID" value=""/>
-            <input type="hidden" id="id" name="id" value=""/> -->
             <input type="submit" id="form_submit_button" value="Upload Image">
           </form>
         </div>
