@@ -12,6 +12,5 @@ handlers:
   script: main.app
 # [END handlers]
 
-
 env_variables:
     CLOUD_STORAGE_BUCKET: kchylee1
