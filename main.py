@@ -1,6 +1,6 @@
 import logging
 import os
-from flask import Flask, render_template, request
+from flask import Flask, request, current_app
 from google.cloud import storage
 app = Flask(__name__)
 import boundingbox
@@ -10,7 +10,7 @@ CLOUD_STORAGE_BUCKET = 'kchylee1'
 
 @app.route('/')
 def index():
-    return render_template('form.html')
+    return current_app.send_static_file('index.html')
 
 @app.route('/upload', methods=['POST'])
 def upload():
