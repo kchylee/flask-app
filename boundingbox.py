@@ -1,6 +1,6 @@
+import urllib
 import numpy as np 
 import cv2
-import urllib
 from google.cloud import storage
 
 def box(img_url, uploaded_file):
@@ -8,8 +8,6 @@ def box(img_url, uploaded_file):
     resp = urllib.urlopen(img_url)
     im = np.asarray(bytearray(resp.read()), dtype="uint8")
     im = cv2.imdecode(im, cv2.IMREAD_COLOR)
-    
-    im = cv2.resize(im, None, fx=32, fy=32)
     hsv_img = cv2.cvtColor(im, cv2.COLOR_BGR2HSV)
 
     #Red threshold
@@ -55,13 +53,13 @@ def box(img_url, uploaded_file):
     x, y, w, h = cv2.boundingRect(cnt)
     cv2.rectangle(im, (x, y), (x+w, y+h), (0, 255, 0), 2)
 
-
     #Upload image with bounding box
-    bounded_im = im
-
-    # if not bounded_im:
-    #     return 'bounded_im upload error.', 400
-
+    bounded_im_name = uploaded_file.filename[:-4] + '_bound.png'
+    bounded_im = cv2.imencode('.png', im)[1].tostring()
+    
+    if not bounded_im:
+        return 'Bounding error.', 400
+    
     # Create a Cloud Storage client.
     gcs = storage.Client()
 
@@ -69,12 +67,8 @@ def box(img_url, uploaded_file):
     bucket = gcs.get_bucket('kchylee1')
 
     # Create a new blob and upload the file's content.
-    blob_bound = bucket.blob(uploaded_file.filename + '_bound')
+    blob_bound = bucket.blob(bounded_im_name)
+    blob_bound.upload_from_string(bounded_im)
 
-    blob_bound.upload_from_string(
-        bounded_im.read(),
-        content_type=bounded_im.content_type
-    )
-
-    # The public URL can be used to directly access the uploaded file via HTTP.
+    # The public URL can be used to directly access the uploaded file via HTTP
     return blob_bound.public_url
