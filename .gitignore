@@ -13,6 +13,11 @@ _mailinglist
 .tox
 .cache/
 .idea/
+.jpg
+.png
+.tiff
+.gif
+
 
 # Coverage reports
 htmlcov
