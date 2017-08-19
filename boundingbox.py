@@ -2,6 +2,7 @@ import urllib
 import numpy as np 
 import cv2
 from google.cloud import storage
+# from google.appengine.api import memcache
 
 def box(img_url, uploaded_file):
     #Encodes image from url so it can be read by OpenCV
@@ -69,6 +70,11 @@ def box(img_url, uploaded_file):
     # Create a new blob and upload the file's content.
     blob_bound = bucket.blob(bounded_im_name)
     blob_bound.upload_from_string(bounded_im)
+
+    # #Store URL into GAE Memcache
+    # client = memcache.Client()
+    # cache_img = client.add("img1", blob_bound.public_url)
+    # print 'cached: ' + cache_img
 
     # The public URL can be used to directly access the uploaded file via HTTP
     return blob_bound.public_url
