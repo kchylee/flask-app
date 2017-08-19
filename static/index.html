@@ -2,11 +2,8 @@
 <html>
     <head>
       <title>Objecti-fi</title>
-     <link rel="stylesheet" type="text/css" href="/static/style.css">
+     <link rel="stylesheet" type="text/css" href="./static/style.css">
      <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-     <script type=text/javascript>
-      $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
-    </script>
      <script type=text/javascript>
         $(function(){
           $('#form_submit_button').click(function(e) {
@@ -25,8 +22,16 @@
                 $('#main').append('<h3>Something went wrong. Please try again.</h3>');
               }
             });
+          });
+
+          $(document).ajaxStart(function(){
+              $('.loader').css("display", "block");
           })
-        })
+
+          $(document).ajaxStop(function(){
+            $('.loader').css("display", "none");
+          })
+        });
       </script>
     </head>
     <body>
@@ -37,11 +42,12 @@
         <div id="main">
           <form id="img_upload" method="post" enctype="multipart/form-data">
             <label>Image:</label>
-            <img src="" alt="bounded-image">
+            <div class="loader"></div>
+            <img class="bounded-image" src="" alt="bounded-image">
             <input type="file" name="img"/>
             <input type="submit" id="form_submit_button" value="Upload Image">
           </form>
         </div>
       </div>
     </body>
-  </html>
+</html>
