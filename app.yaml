@@ -14,3 +14,11 @@ handlers:
 
 env_variables:
     CLOUD_STORAGE_BUCKET: kchylee1
+    MEMCACHE_SERVER: memcached-14094.c1.us-central1-2.gce.cloud.redislabs.com:14094
+  # If you are using a third-party or self-hosted Memcached server with SASL
+  # authentiation enabled, uncomment and fill in these values with your
+  # username and password.
+    MEMCACHE_USERNAME: boundingbox
+    MEMCACHE_PASSWORD: boundingbox
+
+  
