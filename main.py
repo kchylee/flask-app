@@ -4,8 +4,15 @@ from flask import Flask, request, current_app
 from google.cloud import storage
 app = Flask(__name__)
 import boundingbox
+import pylibmc
 
-
+# Environment variables are defined in app.yaml.
+MEMCACHE_SERVER = os.environ.get('MEMCACHE_SERVER', 'localhost:11211')
+MEMCACHE_USERNAME = os.environ.get('MEMCACHE_USERNAME')
+MEMCACHE_PASSWORD = os.environ.get('MEMCACHE_PASSWORD')
+memcache_client = pylibmc.Client(
+    [MEMCACHE_SERVER], binary=True,
+    username=MEMCACHE_USERNAME, password=MEMCACHE_PASSWORD)
 CLOUD_STORAGE_BUCKET = 'kchylee1'
 # os.environ['CLOUD_STORAGE_BUCKET']
 
@@ -33,4 +40,14 @@ def upload():
         content_type=uploaded_file.content_type
     )
 
-    return boundingbox.box(blob.public_url, uploaded_file)
+    #Caching bounded image URL
+    image_with_box = boundingbox.box(blob.public_url, uploaded_file)
+    if memcache_client.get("bound_image") == None:
+        memcache_client.set("bound_image", image_with_box)
+    else:
+        memcache_client.prepend("bound_image", image_with_box + ",")    
+    return image_with_box
+
+@app.route('/getcache', methods=['GET'])
+def getcache():
+    return memcache_client.get("bound_image")
