@@ -6,6 +6,26 @@
      <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
      <script type=text/javascript>
         $(function(){
+          $.ajax({
+            type: "GET",
+            url: "/getcache",
+            success: function(result){
+              
+              let resArr = result.split(",");
+              let res;
+              if (resArr.length === 0){
+                return;
+              }else if(resArr.length > 5){
+                res = resArr.slice(0, 5);
+              }else{
+                res = resArr;
+              }
+              console.log(res)
+              for (i in res){
+                $('.past_images').append(`<img class="cached" src=${res[i]}>`);
+              }
+            }
+          })
           $('#form_submit_button').click(function(e) {
             e.preventDefault();
             let formData = new FormData($('#img_upload')[0]);
@@ -16,7 +36,8 @@
               contentType: false,
               processData: false,
               success: function(result) {
-                $('#main').append(`<img src=${result} alt='bounded-image'>`);
+                $('.bounded_image').attr('src', result);
+                $('.bounded_image').css('display', 'block');
               },
               failure: function(result) {
                 $('#main').append('<h3>Something went wrong. Please try again.</h3>');
@@ -25,7 +46,7 @@
           });
 
           $(document).ajaxStart(function(){
-              $('.loader').css("display", "block");
+            $('.loader').css("display", "block");
           })
 
           $(document).ajaxStop(function(){
@@ -41,11 +62,13 @@
         </div>
         <div id="main">
           <form id="img_upload" method="post" enctype="multipart/form-data">
-            <label>Image:</label>
             <div class="loader"></div>
-            <img class="bounded-image" src="" alt="bounded-image">
+            <img class="bounded_image" src="">
             <input type="file" name="img"/>
             <input type="submit" id="form_submit_button" value="Upload Image">
+
+            <div class="past_images"><h3>Past Images</h3></div>
+            
           </form>
         </div>
       </div>
