@@ -2,8 +2,12 @@
     margin: auto;
 }
 
-.pagetitle {
-    color: #800080;
+.bounded_image{
+  display: none;
+}
+
+.cached{
+  height: 10vw;
 }
 
 .loader {
